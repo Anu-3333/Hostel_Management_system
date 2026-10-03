@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Room - Hostel</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f5f5f5;
+            color: #333333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding-top: 50px;
+        }
+
+        .container {
+            max-width: 600px;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-control {
+            background-color: #ffffff;
+            color: #495057;
+            border: 1px solid #ced4da;
+        }
+
+        .form-control:focus {
+            background-color: #ffffff;
+            color: #495057;
+            border-color: #80bdff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2 class="mb-4 text-center">Edit Room</h2>
+        <form th:action="@{/admin/room/update}" method="post">
+            <input type="hidden" name="id" th:value="${room.id}">
+
+            <div class="form-group">
+                <label for="roomNumber">Room Number</label>
+                <input type="text" class="form-control" id="roomNumber" name="roomNumber" th:value="${room.roomNumber}"
+                    readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="roomType">Room Type</label>
+                <select class="form-control" id="roomType" name="roomType">
+                    <option value="Single" th:selected="${room.roomType == 'Single'}">Single</option>
+                    <option value="Double" th:selected="${room.roomType == 'Double'}">Double</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="status">Status</label>
+                <select class="form-control" id="status" name="status">
+                    <option value="Occupied" th:selected="${room.status == 'Occupied'}">Occupied</option>
+                    <option value="Available" th:selected="${room.status == 'Available'}">Available</option>
+                    <option value="Pending" th:selected="${room.status == 'Pending'}">Pending</option>
+                    <option value="Maintenance" th:selected="${room.status == 'Maintenance'}">Maintenance</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-success btn-block">Update Room</button>
+            <a href="/manage_rooms" class="btn btn-secondary btn-block">Cancel</a>
+        </form>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="https://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pending Request Approval Form</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ffffff;
+            color: #333333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar-custom {
+            background-color: #2c3e50;
+            z-index: 1000;
+        }
+
+        .navbar-custom .navbar-brand,
+        .navbar-custom .navbar-nav .nav-link {
+            color: #ffffff;
+        }
+
+        .navbar-custom .navbar-nav .nav-link:hover {
+            color: #d1d8e0;
+        }
+
+        .main-content {
+            margin-top: 80px;
+            padding: 20px;
+        }
+
+        .card {
+            border-radius: 15px;
+            background-color: #ffffff;
+            color: #333333;
+            border: 1px solid #dee2e6;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .card-text {
+            font-size: 1.2rem;
+        }
+
+
+        .btn-custom {
+            background-color: #a44b3c;
+            color: #ffffff;
+            border: none;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .btn-custom:hover {
+            background-color: #8a3a33;
+            transform: scale(1.05);
+            color: #ffffff;
+        }
+
+        .form-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 8px;
+        }
+
+        .table th,
+        .table td {
+            vertical-align: middle;
+            color: #333333;
+        }
+
+        .container {
+            background: none;
+            padding: 0;
+        }
+
+        .container-inner {
+            background-color: transparent;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .footer {
+            background-color: #2c3e50;
+            color: #ffffff;
+            text-align: center;
+            padding: 10px;
+            position: relative;
+            width: 100%;
+            bottom: 0;
+            border-top: none;
+        }
+
+        .footer a {
+            color: #bdc3c7;
+            text-decoration: none;
+
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+            color: white;
+        }
+
+
+        .no-requests {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333333;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .no-requests i {
+            font-size: 3rem;
+            color: #a44b3c;
+            margin-bottom: 20px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+        <a class="navbar-brand" href="#">Hostel Management System</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <div class="container-inner animate__animated animate__fadeIn">
+                <h1 class="mb-4 text-center text-dark">Pending Request Approval</h1>
+                <div th:if="${userList.isEmpty()}">
+                    <div class="no-requests">
+                        <i class="fas fa-exclamation-circle animate__animated animate__bounce"></i>
+                        <p>There are no pending requests</p>
+                    </div>
+                </div>
+                <div th:each="user : ${userList}">
+                    <form action="/admin/approverequest" method="post" class="card p-4 mb-4">
+                        <table class="table table-borderless">
+                            <tbody>
+                                <tr>
+                                    <th scope="row"><img src="https://cdn-icons-png.flaticon.com/512/306/306473.png"
+                                            class="form-icon" alt="ID Icon">Id:</th>
+                                    <td><span th:text="${user.id}"></span></td>
+
+                                    <th scope="row"><img src="https://cdn-icons-png.flaticon.com/512/561/561127.png"
+                                            class="form-icon" alt="Email Icon">Email:</th>
+                                    <td><span th:text="${user.userEmail}"></span></td>
+                                    <input type="email" readonly hidden name="email" th:value="${user.userEmail}">
+
+                                    <th scope="row"><img src="https://cdn-icons-png.flaticon.com/512/15/15874.png"
+                                            class="form-icon" alt="Phone Icon">Phone:</th>
+                                    <td><span th:text="${user.userPhone}"></span></td>
+                                </tr>
+
+                                <th scope="row"><img src="https://cdn-icons-png.flaticon.com/512/3114/3114883.png"
+                                        class="form-icon" alt="Room Number Icon">Room Number:</th>
+                                <td>
+                                    <input type="text" class="form-control" name="roomNumber"
+                                        placeholder="Assign Room No" th:value="${user.roomNumber}"
+                                        style="max-width: 150px;">
+                                </td>
+                                <th scope="row"><img src="https://cdn-icons-png.flaticon.com/512/181/181474.png"
+                                        class="form-icon" alt="Room Type Icon">Room Type:</th>
+                                <td>
+                                    <select class="form-control" name="roomType" style="max-width: 150px;">
+                                        <option value="Single" th:selected="${user.roomType == 'Single'}">Single
+                                        </option>
+                                        <option value="Double" th:selected="${user.roomType == 'Double'}">Double
+                                        </option>
+                                    </select>
+                                </td>
+                                <th scope="row"><img src="https://cdn-icons-png.flaticon.com/512/1041/1041916.png"
+                                        class="form-icon" alt="Status Icon">Status:</th>
+                                <td>Pending</td>
+
+                            </tbody>
+                        </table>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-custom"><i class="fas fa-check-circle"></i> Approve
+                                Request</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; Hostel Management System</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>
+
+
+
+
+
+<!-- <form action="/admin/approverequest" method="post" class="card p-4 mb-4"></form> -->

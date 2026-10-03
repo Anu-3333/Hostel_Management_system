@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - Hostel Management System</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        body {
+            padding-top: 56px;
+            background-color: #ffffff;
+            /* Changed to White */
+            color: #333333;
+            /* Changed to Dark Grey for contrast */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .noti_div {
+            background-image: url("https://cdn-icons-png.flaticon.com/128/14026/14026986.png");
+            border-radius: 50%;
+            background-size: cover;
+            width: 20px;
+            height: 20px;
+            margin-top: -40px;
+            display: none;
+            animation: zoomInOut 1s infinite;
+        }
+
+        @keyframes zoomInOut {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.5);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .navbar {
+            background-color: #2c3e50;
+            /* Changed to Dark Slate Blue for contrast with white body */
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            color: #ffffff !important;
+        }
+
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+
+        .sidebar {
+            height: 100vh;
+            background-color: #34495e;
+            /* Sidebar Darker Blue */
+            padding: 20px;
+            width: 250px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 56px;
+            left: 0;
+            /* Visible by default */
+            transition: left 0.3s ease;
+            z-index: 900;
+        }
+
+        .sidebar.open {
+            left: 0;
+        }
+
+        .sidebar .nav-link {
+            color: #ecf0f1;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            padding: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar .nav-link:hover {
+            color: #ffffff;
+            background-color: #2c3e50;
+            text-decoration: none;
+        }
+
+        .sidebar .nav-link.active {
+            background-color: #2c3e50;
+            border-left: 4px solid #3498db;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            /* Push content to right */
+            margin-top: 40px;
+            padding: 20px;
+            min-height: calc(100vh - 56px - 60px);
+            /* Adjust for navbar and footer */
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #a44b3c;
+            padding-bottom: 10px;
+            color: #a44b3c;
+        }
+
+        .info-box {
+            background-color: #ffffff;
+            /* White card background */
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 0px;
+            /* Controlled by col mb-4 */
+            height: 100%;
+            /* Force full height */
+            min-height: 220px;
+            /* Enforce consistent minimum height */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            /* Soft shadow */
+            border: 1px solid #e0e0e0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .info-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .info-icon {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: #f8f9fa;
+            /* Light grey for icon bg */
+            margin-right: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-content {
+            display: flex;
+            align-items: center;
+        }
+
+        .info-content h5 {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .info-content p {
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer {
+            background-color: #2c3e50;
+            color: #ffffff;
+            text-align: center;
+            padding: 15px;
+            margin-top: auto;
+        }
+
+        .footer a {
+            color: #bdc3c7;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+
+        .btn-custom {
+            background-color: #a44b3c;
+            color: #ffffff !important;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            padding: 8px 16px;
+        }
+
+        .btn-custom:hover {
+            background-color: #8a3a33;
+        }
+
+        .mobile-nav-toggle {
+            display: block;
+            /* Show on all screens */
+        }
+
+        @media (min-width: 768px) {
+            .sidebar.closed {
+                left: -250px;
+            }
+
+            .main-content.expanded {
+                margin-left: 0;
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            .main-content {
+                margin-left: 0;
+            }
+
+            .sidebar {
+                width: 100%;
+                position: relative;
+                top: 0;
+                left: 0;
+                height: auto;
+                padding: 10px;
+                box-shadow: none;
+                display: none;
+                /* Hidden by default on mobile, toggled via JS */
+            }
+
+            .sidebar.open {
+                display: block;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <a class="navbar-brand" href="#">Hostel Management System</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <button class="btn btn-outline-light mobile-nav-toggle" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a style="color: #ffffff" class="nav-link" href="#" data-toggle="modal" data-target="#logoutModal">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" href="#"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/profile}"><i class="fas fa-user"></i> Profile</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/myroom"><i class="fas fa-bed"></i> My Room</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/payment"><i class="fas fa-money-check-alt"></i> Payments</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/settings"><i class="fas fa-cogs"></i> Settings</a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <h1 class="section-title">
+                Welcome,
+                <span th:if="${user.userName != null}" th:text="${user.userName}"></span>
+                <span th:unless="${user.userName != null}">User</span>
+            </h1>
+
+            <div class="row">
+                <div class="col-md-4 d-flex align-items-stretch mb-4">
+                    <div class="info-box w-100">
+                        <div class="info-content">
+                            <div class="info-icon">
+                                <img src="https://cdn-icons-png.flaticon.com/512/4051/4051716.png" alt="My Room Icon"
+                                    width="40" height="40">
+                            </div>
+                            <div>
+                                <h5 class="mb-1">My Room</h5>
+                                <div th:if="${myRoom != null and myRoom.status != 'Pending'}">
+                                    <p>Room Number: <span th:text="${user.roomNumber}"></span><br>
+                                        Room Type: <span th:text="${user.roomType}"></span></p>
+                                </div>
+                                <div th:unless="${myRoom != null and myRoom.status != 'Pending'}">
+                                    <p>Status: <span class="badge badge-warning"
+                                            th:text="${myRoom != null ? myRoom.status : 'Not Assigned'}"></span></p>
+                                </div>
+                                <a href="/checkout" class="btn btn-custom mt-2">Checkout</a>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 d-flex align-items-stretch mb-4">
+                    <div class="info-box w-100">
+                        <div class="info-content">
+                            <div class="info-icon">
+                                <img src="https://cdn-icons-png.flaticon.com/512/3483/3483224.png"
+                                    alt="Upcoming Bookings Icon" width="40" height="40">
+                            </div>
+                            <div>
+                                <h5 class="mb-1"></h5>
+                                <p>Booking Id: <span th:text="${bookingId != null ? bookingId : 'NULL'}"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 d-flex align-items-stretch mb-4">
+                    <div class="info-box w-100"> <!-- Added w-100 to ensure full width inside flex col -->
+                        <div class="info-content">
+                            <div class="info-icon">
+                                <img src="https://cdn-icons-png.flaticon.com/512/2640/2640294.png"
+                                    alt="Notifications Icon" width="40" height="40">
+                                <div class="noti_div" id="notificationDiv"
+                                    th:style="${newUpdate != null ? 'display: block;' : 'display: none;'}">
+
+                                </div>
+                            </div>
+                            <div>
+                                <h5 class="mb-1"> Notifications </h5>
+                                <p>Stay updated with the latest notifications.</p>
+                                <a href="/notification" class="btn btn-custom mt-2">View Notifications</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Info Boxes -->
+                <div class="col-md-4 d-flex align-items-stretch mb-4">
+                    <div class="info-box w-100">
+                        <div class="info-content">
+                            <div class="info-icon">
+                                <img src="https://cdn-icons-png.flaticon.com/512/1160/1160041.png" alt="Complaint Icon"
+                                    width="40" height="40">
+                            </div>
+                            <div>
+                                <h5 class="mb-1">Complaint</h5>
+                                <p>File and track your complaints regarding any hostel-related issues.</p>
+                                <a href="/complaint" class="btn btn-custom mt-2">Complaint</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-4 d-flex align-items-stretch mb-4">
+                    <div class="info-box w-100">
+                        <div class="info-content">
+                            <div class="info-icon">
+                                <img src="https://cdn-icons-png.flaticon.com/512/206/206380.png" alt="Support Icon"
+                                    width="40" height="40">
+                            </div>
+                            <div>
+                                <h5 class="mb-1">Support</h5>
+                                <p>Get help and support for any issues.</p>
+                                <button type="button" class="btn btn-custom mt-2" data-toggle="modal"
+                                    data-target="#contactModal">Contact Support</button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 d-flex align-items-stretch mb-4">
+                    <div class="info-box w-100">
+                        <div class="info-content">
+                            <div class="info-icon">
+                                <img src="https://cdn-icons-png.flaticon.com/512/616/616489.png"
+                                    alt="Review & Rate Icon" width="40" height="40">
+                            </div>
+                            <div>
+                                <h5 class="mb-1">Review & Rate Us</h5>
+                                <p>Your review matters to us.</p>
+                                <a href="/review" class="btn btn-custom mt-2">Rate Us</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; Hostel Management System</p>
+        </div>
+    </footer>
+
+
+    <!-- Logout Modal -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" style="color: black;" id="logoutModalLabel">Confirm Logout</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="color: black;">
+                    Are you sure you want to logout?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-custom" href="/logout">Logout</a> <!-- Adjust the href as per your route -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Support Modal -->
+    <div class="modal fade" id="contactModal" tabindex="-1" role="dialog" aria-labelledby="contactModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="color: black;">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="contactModalLabel">Support Team – Hostel Management System</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p><i class="fas fa-phone-alt"></i> <strong>Phone:</strong> +91 98765 43210</p>
+                    <p><i class="fas fa-envelope"></i> <strong>Email:</strong> support@hostelms.com</p>
+                    <hr>
+                    <p><i class="fas fa-clock"></i> <strong>Available:</strong> 9:00 AM – 6:00 PM</p>
+                    <p><i class="fas fa-map-marker-alt"></i> <strong>Office:</strong> Warden Block – Ground Floor</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // Toggle sidebar visibility
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.querySelector('.sidebar');
+        const mainContent = document.querySelector('.main-content');
+
+        // Toggle sidebar open/close
+        sidebarToggle.addEventListener('click', (e) => {
+            if (window.innerWidth >= 768) {
+                // Desktop behavior
+                sidebar.classList.toggle('closed');
+                mainContent.classList.toggle('expanded');
+            } else {
+                // Mobile behavior
+                sidebar.classList.toggle('open');
+            }
+            e.stopPropagation(); // Prevent click from closing sidebar immediately
+        });
+
+        // Close sidebar when clicking outside of it (mainly for mobile)
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth < 768) {
+                if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
+                    sidebar.classList.remove('open'); // Close the sidebar
+                }
+            }
+        });
+    </script>
+
+    <!-- notification script  -->
+    <script>
+        function toggleNotification() {
+            const notificationDiv = document.getElementById('notificationDiv');
+            // Hide the notification div on click
+            if (notificationDiv.style.display === 'block') {
+                notificationDiv.style.display = 'none';
+            }
+        }
+
+    </script>
+</body>
+
+</html>

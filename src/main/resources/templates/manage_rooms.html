@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Rooms - Hostel</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+    <style>
+        body {
+            padding-top: 56px;
+            background-color: #f5f5f5;
+            /* Light Grey */
+            color: #333333;
+            /* Dark text */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .navbar {
+            background-color: #2c3e50;
+            /* Dark Slate Blue */
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            color: #fff !important;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+
+        .sidebar {
+            height: 100vh;
+            background-color: #34495e;
+            /* Sidebar Dark Blue */
+            padding: 20px;
+            width: 250px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            border-right: none;
+            position: fixed;
+            top: 56px;
+            bottom: 0;
+            left: 0;
+            overflow-y: auto;
+        }
+
+        .sidebar .nav-link {
+            color: #ecf0f1;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar .nav-link i {
+            margin-right: 10px;
+        }
+
+        .sidebar .nav-link:hover {
+            color: #ffffff;
+            background-color: #2c3e50;
+            text-decoration: none;
+        }
+
+        .sidebar .nav-link.active {
+            background-color: #2c3e50;
+            border-left: 4px solid #3498db;
+        }
+
+        .main-content {
+            margin-left: 270px;
+            margin-top: 40px;
+            padding: 20px;
+            color: #333333;
+        }
+
+        .card {
+            border-radius: 10px;
+            background-color: #ffffff;
+            color: #333333;
+            transition: transform 0.3s, box-shadow 0.3s;
+            padding: 20px;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            background-color: #2c3e50;
+            color: #fff;
+            font-weight: bold;
+            border-bottom: none;
+        }
+
+        .table th,
+        .table td {
+            vertical-align: middle;
+            color: #333333;
+        }
+
+        .table thead th {
+            border-top: none;
+            border-bottom: 2px solid #dee2e6;
+            background-color: #f8f9fa;
+        }
+
+        .table-dark {
+            background-color: #ffffff;
+            color: #333;
+        }
+
+        .table-dark th,
+        .table-dark td,
+        .table-dark thead th {
+            border-color: #dee2e6;
+            background-color: #ffffff;
+            color: #333;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(0, 0, 0, .05);
+        }
+
+        .table-container {
+            margin-top: 20px;
+        }
+
+        #searchSuggestions {
+            position: absolute;
+            z-index: 1000;
+            width: 100%;
+            background-color: #ffffff;
+            color: #333;
+            max-height: 200px;
+            overflow-y: auto;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            margin-top: 5px;
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        #roomSearch {
+            border-radius: 20px;
+            padding: 10px 20px;
+            background-color: #ffffff;
+            color: #333;
+            border: 1px solid #ced4da;
+        }
+
+        #roomSearch::placeholder {
+            color: #888;
+        }
+
+        .list-group-item {
+            cursor: pointer;
+            border: none;
+            padding: 12px;
+            background-color: #ffffff;
+            color: #333;
+        }
+
+        .list-group-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .list-group-item:not(:last-child) {
+            border-bottom: 1px solid #eee;
+        }
+
+        .footer {
+            background-color: #2c3e50;
+            color: #ffffff;
+            text-align: center;
+            padding: 15px;
+            width: 100%;
+            border-top: none;
+            position: relative;
+            margin-top: auto;
+        }
+
+        .footer a {
+            color: #bdc3c7;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+            color: #ffffff;
+        }
+
+        .contact-icons i {
+            margin: 0 10px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .contact-icons i:hover {
+            color: #a44b3c;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .search-bar {
+                width: 100%;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+        <a class="navbar-brand" href="#">Hostel Management System</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <div class="d-flex">
+        <nav class="sidebar p-3">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/manage_student"><i class="fas fa-users"></i> Manage Students</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/manage_rooms"><i class="fas fa-bed"></i> Manage Rooms</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/manage_bookings"><i class="fas fa-calendar-alt"></i> Manage Bookings</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin_setting"><i class="fas fa-cogs"></i> Settings</a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content flex-fill">
+            <div class="container">
+                <h1 class="mb-4">Manage Rooms</h1>
+
+                <!-- search bar -->
+                <div class="search-bar">
+                    <input type="text" id="roomSearch" class="form-control" placeholder="Search Room Number">
+                    <div id="searchSuggestions" class="list-group mt-2"></div>
+                </div>
+
+
+                <!-- Room Statistics -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Capacity</h5>
+                                <p class="card-text">50 rooms available</p>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Available Rooms</h5>
+                                <p class="card-text" th:text="${totalAvailable}">0</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Occupied Rooms</h5>
+                                <p class="card-text" th:text="${totalOccupied}">0</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Room List with Pagination -->
+                <div class="table-container">
+                    <h3 class="mb-4">Room List</h3>
+                    <table class="table table-dark table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Room Number</th>
+                                <th>Hostel</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>User</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:if="${#lists.isEmpty(roomList)}">
+                                <td colspan="6" class="text-center">No rooms occupied yet.</td>
+                            </tr>
+                            <tr th:each="room : ${roomList}">
+                                <td th:text="${room.roomNumber}">101</td>
+                                <td th:text="${room.hostelName}">Hostel 1</td>
+                                <td th:text="${room.roomType}">Single</td>
+                                <td>
+                                    <span th:if="${room.status == 'Available'}"
+                                        class="badge badge-success">Available</span>
+                                    <span th:if="${room.status == 'Occupied'}"
+                                        class="badge badge-danger">Occupied</span>
+                                    <span th:if="${room.status == 'Pending'}" class="badge badge-warning">Pending</span>
+                                    <span th:if="${room.status == 'Maintenance'}"
+                                        class="badge badge-secondary">Maintenance</span>
+                                    <span
+                                        th:if="${room.status != 'Available' and room.status != 'Occupied' and room.status != 'Pending' and room.status != 'Maintenance'}"
+                                        class="badge badge-info" th:text="${room.status}"></span>
+                                </td>
+                                <td th:text="${room.user != null ? room.user.userName : 'N/A'}">John Doe</td>
+                                <td>
+                                    <a th:href="@{/admin/room/edit/number/{num}(num=${room.roomNumber})}"
+                                        class="btn btn-primary btn-sm">Edit</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; Hostel Management System</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const roomSearch = document.getElementById('roomSearch');
+            const searchSuggestions = document.getElementById('searchSuggestions');
+            let typingTimer;  // Timer for detecting when typing stops
+            const typingDelay = 2000;  // Delay in milliseconds (1 second)
+
+            roomSearch.addEventListener('input', function () {
+                clearTimeout(typingTimer); // Clear previous timer if input is still ongoing
+
+                const query = roomSearch.value.trim();
+
+                // Check if the query is a number and between 1 and 300
+                const roomNumber = parseInt(query, 10);
+
+                if (!isNaN(roomNumber) && (roomNumber >= 101 && roomNumber <= 1300)) {
+                    // Proceed with fetching room data if the input is valid
+                    fetch(`/search-room?query=${query}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            searchSuggestions.innerHTML = ''; // Clear previous suggestions
+                            if (data.length > 0) {
+                                // Populate room data in search suggestions
+                                data.forEach(room => {
+                                    const roomItem = document.createElement('a');
+                                    roomItem.href = `/room/${room.id}`;
+                                    roomItem.classList.add('list-group-item', 'list-group-item-action');
+                                    roomItem.textContent = `Room ${room.roomNumber} - ${room.status}`;
+                                    searchSuggestions.appendChild(roomItem);
+                                });
+                            } else {
+                                searchSuggestions.innerHTML = '<p class="list-group-item">Room not Available</p>';
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error fetching room data:', error);
+                            searchSuggestions.innerHTML = '<p class="list-group-item">Error fetching room data</p>';
+                        });
+                } else {
+                    // Show "Room not found" if the input is outside 1-300 or invalid
+                    searchSuggestions.innerHTML = '<p class="list-group-item">Room not found</p>';
+                }
+
+                // Set timer to clear suggestions after delay if typing stops
+                typingTimer = setTimeout(() => {
+                    searchSuggestions.innerHTML = ''; // Clear suggestions when typing stops
+                }, typingDelay);
+            });
+        });
+    </script> -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const roomSearch = document.getElementById('roomSearch');
+            const searchSuggestions = document.getElementById('searchSuggestions');
+            let typingTimer;
+            const typingDelay = 500;
+
+            roomSearch.addEventListener('input', function () {
+                clearTimeout(typingTimer);
+                const query = roomSearch.value.trim();
+                const roomNumber = parseInt(query, 10);
+
+                if (!isNaN(roomNumber) && roomNumber >= 1 && roomNumber <= 1300) {
+                    typingTimer = setTimeout(function () {
+                        fetch(`/search-room?query=${query}`)
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Network response was not ok');
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                searchSuggestions.innerHTML = '';
+                                const item = document.createElement('a');
+                                item.classList.add('list-group-item', 'list-group-item-action');
+
+                                if (data.status === 'Available') {
+                                    item.textContent = `Room ${data.roomNumber} is Available`;
+                                    item.classList.add('list-group-item-success');
+                                } else {
+                                    // Link to edit page if room exists in DB
+                                    item.href = `/admin/room/edit/${data.id}`;
+                                    item.innerHTML = `<strong>Room ${data.roomNumber}</strong> <span class="badge badge-warning">${data.status}</span><br>
+                                                      <small>Type: ${data.roomType} | Student: ${data.userName}</small>`;
+                                }
+                                searchSuggestions.appendChild(item);
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                searchSuggestions.innerHTML = '<div class="list-group-item list-group-item-danger">Room not found</div>';
+                            });
+                    }, typingDelay);
+                } else {
+                    if (query.length > 0) {
+                        searchSuggestions.innerHTML = '<div class="list-group-item text-danger">Invalid room number (1-1300)</div>';
+                    } else {
+                        searchSuggestions.innerHTML = '';
+                    }
+                }
+            });
+
+            // Close suggestions on click outside (optional but good UX)
+            document.addEventListener('click', function (e) {
+                if (!roomSearch.contains(e.target) && !searchSuggestions.contains(e.target)) {
+                    searchSuggestions.innerHTML = '';
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

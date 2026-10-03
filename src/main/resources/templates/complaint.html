@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complaint Dashboard - Hostel Management System</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Link to Font Awesome for icons -->
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            /* Light Grey */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background-color: #2c3e50;
+            /* Dark Slate Blue */
+            padding: 15px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .container {
+            display: flex;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 40px auto;
+            gap: 20px;
+        }
+
+        .hostel-info {
+            flex: 1;
+            background-color: #ffffff;
+            /* White */
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            color: #333;
+        }
+
+        .hostel-info img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .complaint-form {
+            flex: 1;
+            background-color: #ffffff;
+            /* White */
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            color: #333;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        label {
+            font-weight: 600;
+            display: block;
+            margin-top: 10px;
+            color: #555;
+        }
+
+        select,
+        input,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+            color: #333;
+            font-family: inherit;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        button {
+            background-color: #a44b3c;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #8a3a33;
+        }
+
+        .user-info {
+            background-color: #ffffff;
+            padding: 15px;
+            color: #333;
+            border-radius: 5px;
+            position: absolute;
+            top: 70px;
+            right: 20px;
+            width: 250px;
+            display: none;
+            z-index: 100;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            border: 1px solid #ddd;
+        }
+
+        .profile:hover .user-info {
+            display: block;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 15px 0;
+            background-color: #2c3e50;
+            color: white;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            margin-top: auto;
+        }
+
+        .footer_div a {
+            color: #bdc3c7;
+            padding: 5px;
+            text-decoration: none;
+        }
+
+        .footer_div a:hover {
+            text-decoration: underline;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .user-info {
+                position: relative;
+                margin-bottom: 20px;
+            }
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar Section -->
+    <div class="navbar">
+        <div class="brand">Hostel Management System</div>
+        <div class="profile">
+            <a href="/profile"><img src="https://cdn-icons-png.flaticon.com/128/18083/18083477.png" alt="User Avatar"
+                    style="border-radius: 50%; max-width: 50px; max-height: 50px; vertical-align: middle; cursor: pointer;"></a>
+            <div class="user-info">
+                <p><strong>Name:</strong> <span th:text="${user.userName}">User</span></p>
+                <p><strong>Email:</strong> <span th:text="${user.userEmail}">John Doe</span></p>
+                <p><strong>Hostel Number:</strong> <span th:text="${user.hostelNumber}">101</span></p>
+                <p><strong>Room Number:</strong> <span th:text="${user.roomNumber}">201</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Information Section -->
+    <div class="container">
+        <div class="hostel-info">
+            <h2>About Our Hostel</h2>
+            <img src="https://aadindia.com/uploads/projects/151428288502.jpg" alt="Hostel Image">
+
+            <p>Welcome to our hostel! We provide a comfortable and safe environment for all our residents. Our
+                facilities include study rooms, recreational areas, and 24/7 security. We aim to create a community
+                where students can thrive and make lifelong memories.</p>
+        </div>
+
+        <div class="complaint-form">
+            <h2>Write Your Complaint</h2>
+            <div th:if="${message}" class="alert alert-success" role="alert">
+                <p th:text="${message}"></p>
+            </div>
+            <form action="/submit_complaint" method="POST">
+                <input type="email" name="email" th:value="${user.userEmail}" hidden>
+                <label for="issue-type">Issue Type</label>
+                <select id="issue-type" name="cmpType" required>
+                    <option value="" disabled selected>Select an issue</option>
+                    <option value="maintenance">Maintenance</option>
+                    <option value="cleanliness">Cleanliness</option>
+                    <option value="water_supply">Water Supply</option>
+                    <option value="electricity_supply">Electricity Supply</option>
+                    <option value="other">Other</option>
+                </select>
+
+                <label for="description">Description of the Issue</label>
+                <textarea id="description" style="width: 600px; min-width: 600px; max-width: 600px;" name="description"
+                    rows="3" placeholder="Describe the issue in detail..." required></textarea>
+
+                <button type="submit">Submit Complaint</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; Hostel Management System</p>
+    </footer>
+</body>
+
+</html>
